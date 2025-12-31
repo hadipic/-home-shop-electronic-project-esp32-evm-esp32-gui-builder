@@ -157,8 +157,34 @@
 import { Document, Monitor, DocumentAdd, FolderOpened } from '@element-plus/icons-vue'
 import { projectStore } from './store/projectStore'
 import { ElMessage } from 'element-plus'
+import { defineComponent } from 'vue'
 
-export default {
+// تعریف interface برای EVM Settings
+interface EVMSettings {
+  optimizeMemory: boolean;
+  includeComments: boolean;
+  moduleFormat: 'commonjs' | 'esm';
+  version: string;
+}
+
+// تعریف interface برای Project Config
+interface ProjectConfig {
+  name: string;
+  description: string;
+  version: string;
+  author: string;
+  lvglVersion: string;
+  screenSize: { width: number; height: number };
+  colorDepth: number;
+  defaultFont: string;
+  outputFormat: string;
+  outputPath: string;
+  prefix: string;
+  assets: any;
+  evmSettings: EVMSettings;
+}
+
+export default defineComponent({
   name: 'creator-project-settings',
   components: {
     Document,
@@ -182,13 +208,13 @@ export default {
         outputPath: projectStore.projectData.settings.output.path,
         prefix: projectStore.projectData.settings.output.prefix || 'ui_',
         assets: projectStore.projectData.assets,
-        evmSettings: projectStore.projectData.settings.evm || {
+        evmSettings: (projectStore.projectData.settings as any).evm || {
           optimizeMemory: true,
           includeComments: true,
           moduleFormat: 'commonjs',
           version: '2.0'
         }
-      },
+      } as ProjectConfig,
       availableFonts: projectStore.getAllAssets('fonts') || []
     }
   },
@@ -218,12 +244,13 @@ export default {
       };
 
       if (this.config.evmSettings) {
-        projectStore.projectData.settings.evm = this.config.evmSettings;
+        // استفاده از type assertion برای حل خطای TypeScript
+        (projectStore.projectData.settings as any).evm = this.config.evmSettings;
       }
 
       projectStore.saveProject();
 
-      this.$emit('save', projectStore.projectData);
+      (this as any).$emit('save', projectStore.projectData);
 
       ElMessage({
         message: 'Settings saved successfully',
@@ -245,13 +272,13 @@ export default {
         outputPath: projectStore.projectData.settings.output.path,
         prefix: projectStore.projectData.settings.output.prefix || 'ui_',
         assets: projectStore.projectData.assets,
-        evmSettings: projectStore.projectData.settings.evm || {
+        evmSettings: (projectStore.projectData.settings as any).evm || {
           optimizeMemory: true,
           includeComments: true,
           moduleFormat: 'commonjs',
           version: '2.0'
         }
-      };
+      } as ProjectConfig;
     },
 
     selectOutputPath() {
@@ -269,7 +296,7 @@ export default {
   mounted() {
     this.resetSettings();
   }
-}
+})
 </script>
 
 <style lang="less" scoped>
