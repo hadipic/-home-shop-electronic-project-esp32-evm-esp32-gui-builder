@@ -91,11 +91,26 @@
           <el-form :model="config" label-width="120px">
             <el-form-item label="Output Format">
               <el-radio-group v-model="config.outputFormat">
-                <el-radio value="cpp" disabled>C++</el-radio>
-                <el-radio value="c">C</el-radio>
+                 <el-radio value="evm-js">EVM JavaScript (ESP32)</el-radio>
+                          <el-radio value="c">C</el-radio>
                 <el-radio value="python">Python</el-radio>
+               
               </el-radio-group>
             </el-form-item>
+            
+            <el-form-item label="EVM Settings" v-if="config.outputFormat === 'evm-js'">
+              <div class="evm-settings">
+                <el-checkbox v-model="config.evmSettings.optimizeMemory" label="Optimize Memory" />
+                <el-checkbox v-model="config.evmSettings.includeComments" label="Include Comments" />
+                <div style="margin-top: 10px;">
+                  <el-select v-model="config.evmSettings.moduleFormat" size="small">
+                    <el-option label="CommonJS (require)" value="commonjs" />
+                    <el-option label="ES Module (import)" value="esm" />
+                  </el-select>
+                </div>
+              </div>
+            </el-form-item>
+            
             <el-form-item label="Output Path">
               <el-input v-model="config.outputPath">
                 <template #append>
@@ -141,6 +156,7 @@
 <script lang="ts">
 import { Document, Monitor, DocumentAdd, FolderOpened } from '@element-plus/icons-vue'
 import { projectStore } from './store/projectStore'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'creator-project-settings',
@@ -153,7 +169,6 @@ export default {
   data() {
     return {
       activeMenu: 'basic',
-      // 直接使用 projectStore 中的数据
       config: {
         name: projectStore.projectData.name,
         description: projectStore.projectData.description,
@@ -163,52 +178,59 @@ export default {
         screenSize: projectStore.projectData.settings.screen,
         colorDepth: projectStore.projectData.settings.lvgl.colorDepth,
         defaultFont: projectStore.projectData.settings.lvgl.defaultFont || 'montserrat_16',
-        outputFormat: projectStore.projectData.settings.output.format,
+        outputFormat: projectStore.projectData.settings.output.format || 'c',
         outputPath: projectStore.projectData.settings.output.path,
         prefix: projectStore.projectData.settings.output.prefix || 'ui_',
-        assets: projectStore.projectData.assets
+        assets: projectStore.projectData.assets,
+        evmSettings: projectStore.projectData.settings.evm || {
+          optimizeMemory: true,
+          includeComments: true,
+          moduleFormat: 'commonjs',
+          version: '2.0'
+        }
       },
-      availableFonts: projectStore.getAllAssets('fonts')
+      availableFonts: projectStore.getAllAssets('fonts') || []
     }
   },
   methods: {
-    handleMenuSelect(key) {
+    handleMenuSelect(key: string) {
       this.activeMenu = key;
     },
 
-    // 保存设置到 projectStore
     saveSettings() {
-      // 更新 projectStore 数据
       projectStore.projectData.name = this.config.name;
       projectStore.projectData.description = this.config.description;
       projectStore.projectData.version = this.config.version;
       projectStore.projectData.author = this.config.author;
 
-      // 更新 LVGL 设置
       projectStore.projectData.settings.lvgl = {
         version: this.config.lvglVersion,
         colorDepth: this.config.colorDepth,
         defaultFont: this.config.defaultFont
       };
 
-      // 更新屏幕设置
       projectStore.projectData.settings.screen = this.config.screenSize;
 
-      // 更新输出设置
       projectStore.projectData.settings.output = {
         format: this.config.outputFormat,
         path: this.config.outputPath,
         prefix: this.config.prefix
       };
 
-      // 保存到 projectStore
+      if (this.config.evmSettings) {
+        projectStore.projectData.settings.evm = this.config.evmSettings;
+      }
+
       projectStore.saveProject();
 
-      // 通知父组件
       this.$emit('save', projectStore.projectData);
+
+      ElMessage({
+        message: 'Settings saved successfully',
+        type: 'success'
+      });
     },
 
-    // 重置为 projectStore 中的数据
     resetSettings() {
       this.config = {
         name: projectStore.projectData.name,
@@ -219,19 +241,23 @@ export default {
         screenSize: projectStore.projectData.settings.screen,
         colorDepth: projectStore.projectData.settings.lvgl.colorDepth,
         defaultFont: projectStore.projectData.settings.lvgl.defaultFont || 'montserrat_16',
-        outputFormat: projectStore.projectData.settings.output.format,
+        outputFormat: projectStore.projectData.settings.output.format || 'c',
         outputPath: projectStore.projectData.settings.output.path,
         prefix: projectStore.projectData.settings.output.prefix || 'ui_',
-        assets: projectStore.projectData.assets
+        assets: projectStore.projectData.assets,
+        evmSettings: projectStore.projectData.settings.evm || {
+          optimizeMemory: true,
+          includeComments: true,
+          moduleFormat: 'commonjs',
+          version: '2.0'
+        }
       };
     },
 
     selectOutputPath() {
-      // 调用系统文件选择对话框
+      // To be implemented
     }
   },
-
-  // 监听 projectStore 变化
   watch: {
     'projectStore.projectData': {
       handler() {
@@ -240,8 +266,6 @@ export default {
       deep: true
     }
   },
-
-  // 组件挂载时从 projectStore 加载数据
   mounted() {
     this.resetSettings();
   }
@@ -305,6 +329,17 @@ export default {
             margin-left: 4px;
           }
         }
+
+        .evm-settings {
+          padding: 10px;
+          border: 1px solid var(--el-border-color-light);
+          border-radius: 4px;
+          background-color: var(--el-fill-color-light);
+          
+          .el-checkbox {
+            margin-right: 15px;
+          }
+        }
       }
     }
   }
@@ -316,4 +351,4 @@ export default {
     background: var(--el-bg-color);
   }
 }
-</style> 
+</style>
