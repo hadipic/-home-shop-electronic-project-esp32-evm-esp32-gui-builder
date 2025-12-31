@@ -1,12 +1,11 @@
 /* 
- * runtimeTemplateEVM.js - EVM JavaScript Code Generator (FIXED VERSION)
+ * runtimeTemplateEVM.js - EVM JavaScript Code Generator (FINAL CORRECTED VERSION)
  * Target: ESP32 EVM Runtime with @native.lvgl module
- * Fixed issues based on actual EVM API
+ * Based on actual EVM API from hadipic/evm-esp32
  */
 
-import { color_convert } from './runtimeWrapper.js';
-
 // ==================== توابع اصلی ====================
+
 export const template_evm_create = (id, parent_id, type) => {
     return `var ${id} = lv.${getEVMCreateFunction(type)}(${parent_id});`;
 }
@@ -24,6 +23,12 @@ export const template_evm_api_simple = (id, type, api, param, par_id) => {
     
     const formattedValue = formatEVMValue(api, param);
     const funcName = getEVMApiFunction(type, api);
+    
+    // اگر متن فارسی است، تنظیمات فارسی اضافه شود
+    if ((api === 'set_text' || api === 'set_options') && containsPersian(param)) {
+        return `    lv.lv_obj_set_persian_font(${id});\n    lv.lv_obj_set_rtl(${id});\n    lv.${funcName}(${id}, ${formattedValue});`;
+    }
+    
     return `lv.${funcName}(${id}, ${formattedValue});`;
 }
 
@@ -68,49 +73,119 @@ export const template_evm_styles = (node) => {
     let type = node.type;
     
     let code = [];
-    let hasStyle = false;
     
-    // فقط propertyهای ایمن و تست شده
-    const SAFE_PROPERTIES = {
-        'bg_color': true,
-        'bg_opa': true,
-        'radius': true,
-        'text_color': true,
-        'border_color': true,
-        'border_width': true,
-        'arc_color': type === 'arc',
-        'arc_width': type === 'arc'
-    };
+    // اگر style‌ای وجود ندارد
+    if (!node.styles || node.styles.length === 0) {
+        return '';
+    }
     
+    // جمع‌آوری styleهای معتبر
+    let validStyles = [];
     for (let api of node.styles) {
-        let api2 = api.split('.');
-        let part = api2[0];
-        let key = api2.length === 2 ? api2[1] : api;
+        let param = node.data[api];
+        if (param !== undefined && param !== null && param !== '') {
+            validStyles.push({api, param});
+        }
+    }
+    
+    // بررسی آیا متن فارسی دارد
+    const hasPersianText = node.data['text'] && containsPersian(node.data['text']);
+    
+    // برای آرک‌ها
+    if (type === 'arc') {
+        // همیشه knob را مخفی کن
+        code.push(`    styleModule.lv_arc_hide_knob(${id});`);
         
-        // فقط propertyهای ایمن
-        if (SAFE_PROPERTIES[key]) {
-            let param = node.data[api];
-            if (param !== undefined && param !== null && param !== '') {
-                if (!hasStyle) {
-                    code.push(``);
-                    hasStyle = true;
-                }
+        // arc_width (اگر تنظیم شده)
+        const arcWidthStyle = validStyles.find(s => s.api === 'arc_width' || s.api === 'MAIN.arc_width');
+        if (arcWidthStyle) {
+            const formattedValue = formatEVMStyleValue('arc_width', arcWidthStyle.param);
+            code.push(`    styleModule.set_style_arc_width(${id}, ${formattedValue});`);
+            code.push(`    styleModule.set_style_arc_indic_width(${id}, ${formattedValue});`);
+        }
+        
+        // arc_color برای MAIN
+        const mainArcColor = validStyles.find(s => s.api === 'MAIN.arc_color') || 
+                             validStyles.find(s => s.api === 'arc_color');
+        if (mainArcColor) {
+            const formattedValue = formatEVMStyleValue('arc_color', mainArcColor.param);
+            code.push(`    styleModule.set_style_arc_color(${id}, ${formattedValue});`);
+        }
+        
+        // arc_color برای INDICATOR
+        const indicArcColor = validStyles.find(s => s.api === 'INDICATOR.arc_color') || 
+                             validStyles.find(s => s.api === 'arc_color');
+        if (indicArcColor) {
+            const formattedValue = formatEVMStyleValue('arc_color', indicArcColor.param);
+            code.push(`    styleModule.set_style_arc_indic_color(${id}, ${formattedValue});`);
+        }
+        
+        // arc_rounded
+        const arcRounded = validStyles.find(s => s.api === 'arc_rounded' || 
+                                               s.api === 'MAIN.arc_rounded' || 
+                                               s.api === 'INDICATOR.arc_rounded');
+        if (arcRounded) {
+            const formattedValue = formatEVMStyleValue('arc_rounded', arcRounded.param);
+            code.push(`    styleModule.set_style_arc_rounded(${id}, ${formattedValue});`);
+        }
+        
+        // text_font برای آرک (معمولاً روی INDICATOR)
+        const textFont = validStyles.find(s => s.api === 'text_font' || s.api === 'INDICATOR.text_font');
+        if (textFont) {
+            const formattedValue = formatEVMStyleValue('text_font', textFont.param);
+            code.push(`    styleModule.set_style_text_font(${id}, ${formattedValue});`);
+        }
+        
+        // سایر styleهای عمومی
+        for (let style of validStyles) {
+            const styleApi = style.api;
+            // فیلتر کردن styleهای مخصوص آرک که قبلاً پردازش شدند
+            if (!styleApi.includes('arc_') && 
+                !styleApi.includes('MAIN.') && 
+                !styleApi.includes('INDICATOR.') && 
+                !styleApi.includes('KNOB.') &&
+                styleApi !== 'text_font') {
                 
-                const formattedValue = formatEVMStyleValue(key, param);
-                
-                // برای آرک: arc_color و arc_width مستقیماً روی widget
-                if (type === 'arc' && (key === 'arc_color' || key === 'arc_width')) {
-                    code.push(`    styleModule.set_style_${key}(${id}, ${formattedValue});`);
-                } 
-                // برای سایر ویجت‌ها: bg_color, text_color, etc.
-                else if (SAFE_PROPERTIES[key] === true) {
-                    code.push(`    styleModule.set_style_${key}(${id}, ${formattedValue});`);
-                }
+                const formattedValue = formatEVMStyleValue(styleApi, style.param);
+                code.push(`    styleModule.set_style_${styleApi}(${id}, ${formattedValue});`);
+            }
+        }
+    }
+    // برای سایر ویجت‌ها (label, obj, etc.)
+    else {
+        // اگر متن فارسی دارد، تنظیمات فارسی اضافه شود
+        if (hasPersianText) {
+            code.push(`    // تنظیمات فارسی`);
+            code.push(`    lv.lv_obj_set_persian_font(${id});`);
+            code.push(`    lv.lv_obj_set_rtl(${id});`);
+            
+            // فونت فارسی را تنظیم کن
+            const hasFont = validStyles.some(s => s.api === 'text_font');
+            if (!hasFont) {
+                code.push(`    styleModule.set_style_text_font(${id}, lv.lvgl_style_get_persian_font("persian_16"));`);
+            }
+        }
+        
+        for (let style of validStyles) {
+            const styleApi = style.api;
+            const formattedValue = formatEVMStyleValue(styleApi, style.param);
+            
+            // برای text_font: اگر فارسی است، فونت فارسی تنظیم شود
+            if (styleApi === 'text_font' && hasPersianText) {
+                code.push(`    styleModule.set_style_text_font(${id}, lv.lvgl_style_get_persian_font("persian_16"));`);
+            } 
+            // اگر style مربوط به PART خاصی است (مثل MAIN.text_color)
+            else if (styleApi.includes('.')) {
+                // فقط قسمت بعد از نقطه را بگیر (text_color)
+                const cleanApi = styleApi.split('.')[1];
+                code.push(`    styleModule.set_style_${cleanApi}(${id}, ${formattedValue});`);
+            } else {
+                code.push(`    styleModule.set_style_${styleApi}(${id}, ${formattedValue});`);
             }
         }
     }
     
-    return code.join('\n');
+    return code.length > 0 ? '\n' + code.join('\n') : '';
 }
 
 // ==================== توابع کمکی ====================
@@ -239,6 +314,7 @@ function formatEVMValue(attr, value) {
     return JSON.stringify(value);
 }
 
+
 function formatEVMStyleValue(styleApi, value) {
     if (value === undefined || value === null || value === '') {
         return '0';
@@ -252,6 +328,35 @@ function formatEVMStyleValue(styleApi, value) {
         }
         if (cleanValue.startsWith("'") && cleanValue.endsWith("'")) {
             cleanValue = cleanValue.slice(1, -1);
+        }
+        
+        // برای font - دو حالت داریم:
+        if (styleApi.includes('font')) {
+            // حالت 1: font_montserrat_16
+            if (cleanValue.includes('font_montserrat')) {
+                // عدد سایز را استخراج کن
+                const sizeMatch = cleanValue.match(/font_montserrat_(\d+)/);
+                if (sizeMatch) {
+                    const size = sizeMatch[1];
+                    return `lv.lvgl_style_get_font(${size})`;
+                }
+                return `lv.lvgl_style_get_font(16)`; // پیش‌فرض
+            }
+            // حالت 2: فقط عدد (مثل 16، 26)
+            else if (!isNaN(cleanValue)) {
+                return `lv.lvgl_style_get_font(${cleanValue})`;
+            }
+            // حالت 3: persian font
+            else if (cleanValue.includes('persian')) {
+                const sizeMatch = cleanValue.match(/persian_(\d+)/);
+                if (sizeMatch) {
+                    const size = sizeMatch[1];
+                    return `lv.lvgl_style_get_persian_font("persian_${size}")`;
+                }
+                return `lv.lvgl_style_get_persian_font("persian_16")`;
+            }
+            
+            return cleanValue; // بدون تغییر
         }
         
         // برای رنگ‌ها
@@ -271,15 +376,15 @@ function formatEVMStyleValue(styleApi, value) {
         
         // برای opa
         if (styleApi.includes('opa')) {
-            if (cleanValue === '255' || cleanValue.toLowerCase() === 'cover' || cleanValue.toLowerCase() === 'lv_opa_cover') {
+            if (cleanValue === '255' || cleanValue.toLowerCase() === 'cover') {
                 return '255';
             }
-            if (cleanValue === '0' || cleanValue.toLowerCase() === 'transp' || cleanValue.toLowerCase() === 'lv_opa_transp') {
+            if (cleanValue === '0' || cleanValue.toLowerCase() === 'transp') {
                 return '0';
             }
         }
         
-        // برای boolean (با حروف کوچک)
+        // برای boolean
         if (cleanValue.toLowerCase() === 'false') return 'false';
         if (cleanValue.toLowerCase() === 'true') return 'true';
         
@@ -288,6 +393,7 @@ function formatEVMStyleValue(styleApi, value) {
             return cleanValue;
         }
         
+        // برای متن
         return `"${cleanValue}"`;
     }
     
@@ -305,4 +411,26 @@ function formatEVMStyleValue(styleApi, value) {
     }
     
     return JSON.stringify(value);
+}
+
+
+
+// ==================== توابع کمکی فارسی ====================
+
+// تابع کمکی برای تشخیص حروف فارسی
+function containsPersian(text) {
+    if (typeof text !== 'string') return false;
+    
+    // حذف quoteها
+    let cleanText = text;
+    if (cleanText.startsWith('"') && cleanText.endsWith('"')) {
+        cleanText = cleanText.slice(1, -1);
+    }
+    if (cleanText.startsWith("'") && cleanText.endsWith("'")) {
+        cleanText = cleanText.slice(1, -1);
+    }
+    
+    // محدوده Unicode حروف فارسی
+    const persianRange = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+    return persianRange.test(cleanText);
 }
