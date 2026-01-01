@@ -1,44 +1,29 @@
+# LVGL GUI Builder for EVM-ESP32
 
+## 🔗 لینک‌های مهم
 
-<table>
-<tr>
-    <td><a href="https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/demo1"><img src="./docs/preview.png" title="LV Builder Preview" /></a></td>
-    <td><a href="https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/widget"><img src="./docs/preview2.png" title="LV Builder Preview" /></a></td>
-</tr>
-</table>
+### 🌐 اپلیکیشن آنلاین
+- **وب‌سایت**: https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/
 
-*
-🔗 معرفی ماشین مجازی EVM در شاپ الکترونیک
+### 📸 دموها
+| | پیش‌نمایش | لینک |
+|-|-----------|------|
+| 1 | <img src="./docs/preview.png" width="300"> | [دمو ۱](https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/demo1) |
+| 2 | <img src="./docs/preview2.png" width="300"> | [ویرایشگر ویجت](https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/widget) |
 
-https://shop-electronic.ir/ماشین-مجازی-جاوا-برای-امبد-بردها-evm-embedded-virtual-machi/
+### 👥 شبکه‌ها
+- **گروه ESP32**: https://t.me/+oi9QrKR1qdozZTc0
+- **کانال EVM**: https://t.me/esp32_evm
+- **ربات**: @shop_electronic_bot
+- **وبسایت**: https://shop-electronic.ir
 
-ساخت و تولید انواع مدارات الکترونیک @shop_electronic_bot
-گروه esp32 
-https://t.me/+oi9QrKR1qdozZTc0
-سایت شاپ الکترونیک
-https://shop-electronic.ir
-گروه امبدد و کیوت
-https://t.me/Embedded_Qt
+### 💾 مخازن
+- **EVM Linux**: https://github.com/hadipic/evm-linux
+- **ESP32 EVM Bin**: https://github.com/hadipic/esp32-evm-bin  
+- **EVM Java**: https://github.com/hadipic/evm_java
 
-🔗 کانال تلگرام EVM:
-https://t.me/esp32_evm
-
-
-🔗 مخزن گیت‌هاب ESP32 EVM:
-
-https://github.com/hadipic/evm-linux?tab=readme-ov-file
-https://github.com/hadipic/esp32-evm-bin?tab=readme-ov-file
-https://github.com/hadipic/evm_java/tree/main
-
-```markdown
-# LVGL GUI Builder for EVM-ESP32 🎨
-
-<div dir="rtl" align="right">
-
-## 🇮🇷 بیلدر گرافیکی LVGL برای پروژه EVM-ESP32
-
-یک ابزار طراحی رابط کاربری (GUI) با قابلیت کشیدن و رها کردن برای پروژه‌های ESP32 با استفاده از LVGL و EVM Runtime
-
+### 📚 مقالات
+- **معرفی EVM**: https://shop-electronic.ir/ماشین-مجازی-جاوا-برای-امبد-بردها-evm-embedded-virtual-machi/
 </div>
 
 ## ✨ ویژگی‌های اصلی
