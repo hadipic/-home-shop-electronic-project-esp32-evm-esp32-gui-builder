@@ -1,5 +1,11 @@
 
 
+<table>
+<tr>
+    <td><a href="https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/demo1"><img src="./docs/preview.png" title="LV Builder Preview" /></a></td>
+    <td><a href="https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/widget"><img src="./docs/preview2.png" title="LV Builder Preview" /></a></td>
+</tr>
+</table>
 
 ```markdown
 # LVGL GUI Builder for EVM-ESP32 🎨
