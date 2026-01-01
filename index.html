@@ -2,53 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <!-- base حذف شده چون مشکلات ایجاد می‌کند -->
-    <link rel="icon" href="favicon.png" type="image/png" sizes="16x16" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"
-    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LV Builder</title>
-    <meta name="description" content="Drag end drop GUI designer for LVGL, LV builder" />
     <script>
+      // Fix for global in Vite
       window.global = window;
       
-      // Fix for GitHub Pages
+      // GitHub Pages path fix
       (function() {
-        // بررسی کن اگر در مسیر اشتباه هستیم
-        const currentPath = window.location.pathname;
-        const repoName = '-home-shop-electronic-project-esp32-evm-esp32-gui-builder';
-        
-        // اگر کاربر به root اصلی رفته باشد
-        if (currentPath === '/') {
-          window.location.href = '/' + repoName + '/';
-          return;
-        }
-        
-        // اگر در مسیر درست هستیم اما بدون trailing slash
-        if (currentPath === '/' + repoName) {
-          window.location.href = currentPath + '/';
-          return;
+        // فقط اگر در root اصلی هستیم، redirect کنیم
+        if (window.location.pathname === '/') {
+          window.location.href = '/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/';
         }
       })();
     </script>
-    
-    <!-- فقط CSS اصلی را لود کن -->
-    <link rel="stylesheet" href="index.36b8a7f7.css" />
-    
   </head>
   <body>
     <div id="app"></div>
-    
-    <!-- فقط اسکریپت اصلی module type -->
-    <script type="module" crossorigin src="index.3e4c2327.js"></script>
-    
-    <noscript>
-      <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-        <h2>JavaScript is Required</h2>
-        <p>Please enable JavaScript to use LV Builder application.</p>
-      </div>
-    </noscript>
+    <script type="module" src="/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/index.3e4c2327.js"></script>
   </body>
 </html>
