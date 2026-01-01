@@ -1,36 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="icon" href="favicon.png" type="image/png" sizes="16x16">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LV Builder</title>
-    <meta name="description" content="Drag end drop GUI designer for LVGL, LV builder">
     
     <script>
       // برای Vite لازم است
       window.global = window;
-      
-      // بررسی کن اگر در مسیر اشتباه هستیم
-      (function() {
-        const currentPath = window.location.pathname;
-        const repoName = '-home-shop-electronic-project-esp32-evm-esp32-gui-builder';
-        const correctPath = '/' + repoName + '/';
-        
-        // اگر کاربر به root اصلی رفته باشد
-        if (currentPath === '/' || !currentPath.includes(repoName)) {
-          window.location.href = correctPath;
-        }
-      })();
     </script>
     
-    <!-- توجه: مسیرها به پوشه assets اشاره می‌کنند -->
-    <link rel="stylesheet" href="assets/index.36b8a7f7.css">
-    <link rel="stylesheet" href="assets/index.409f6db1.css">
-    <link rel="stylesheet" href="assets/index.42176d7b.css">
-    <link rel="stylesheet" href="assets/index.67bfc724.css">
-    <link rel="stylesheet" href="assets/index.7b63019c.css">
+    <!-- CSS فایل‌ها از پوشه assets -->
+    <link rel="stylesheet" href="assets/index.36b8a7f7.css" />
     
   </head>
   
@@ -42,44 +24,34 @@
     
     <!-- Fallback script -->
     <script>
-      // بعد از 3 ثانیه بررسی کن اگر اپ لود نشد
-      setTimeout(function() {
+      // بعد از 5 ثانیه اگر اپ لود نشد
+      setTimeout(() => {
         const app = document.getElementById('app');
-        if (!app || app.innerHTML.trim() === '') {
-          console.error('App failed to load. Checking file paths...');
+        if (app && !app.innerHTML.trim()) {
+          console.warn('Application not loaded. Testing files...');
           
-          // تست کن که فایل‌ها وجود دارند
-          const testFiles = [
+          // تست فایل‌ها
+          const files = [
             'assets/index.3e4c2327.js',
             'assets/index.36b8a7f7.css',
             'favicon.png'
           ];
           
-          testFiles.forEach(file => {
+          files.forEach(file => {
             fetch(file)
-              .then(res => console.log(`${file}: ${res.status}`))
-              .catch(err => console.error(`${file}: ${err.message}`));
+              .then(r => console.log(`${file}: ${r.status}`))
+              .catch(e => console.error(`${file}: ${e.message}`));
           });
           
           // پیام به کاربر
           app.innerHTML = `
-            <div style="padding: 20px; text-align: center; font-family: Arial;">
-              <h2>Loading LV Builder...</h2>
-              <p>If loading takes too long, please:</p>
-              <ul style="text-align: left; display: inline-block;">
-                <li>Refresh with <strong>Ctrl+F5</strong> (Windows) or <strong>Cmd+Shift+R</strong> (Mac)</li>
-                <li>Clear browser cache</li>
-                <li>Try incognito/private mode</li>
-              </ul>
-              <p style="margin-top: 20px;">
-                <a href="https://github.com/hadipic/-home-shop-electronic-project-esp32-evm-esp32-gui-builder">
-                  Visit GitHub Repository
-                </a>
-              </p>
+            <div style="padding: 20px; font-family: Arial; text-align: center;">
+              <h2>Loading Application...</h2>
+              <p>If this persists, please refresh with <strong>Ctrl+F5</strong></p>
             </div>
           `;
         }
-      }, 3000);
+      }, 5000);
     </script>
     
     <noscript>
