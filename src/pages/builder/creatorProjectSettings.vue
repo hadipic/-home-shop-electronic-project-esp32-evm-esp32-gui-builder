@@ -195,6 +195,7 @@ export default defineComponent({
   data() {
     return {
       activeMenu: 'basic',
+        activeTab: '',  // <-- اینجا درست است (در سطح root)
       config: {
         name: projectStore.projectData.name,
         description: projectStore.projectData.description,
@@ -213,6 +214,7 @@ export default defineComponent({
           includeComments: true,
           moduleFormat: 'commonjs',
           version: '2.0'
+        
         }
       } as ProjectConfig,
       availableFonts: projectStore.getAllAssets('fonts') || []
