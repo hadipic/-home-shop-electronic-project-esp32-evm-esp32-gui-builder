@@ -3,90 +3,89 @@
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="icon" href="./favicon.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="favicon.png" type="image/png" sizes="16x16">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
     <title>LV Builder</title>
     <meta name="description" content="Drag end drop GUI designer for LVGL, LV builder">
     
     <script>
-      // Vite نیاز به global دارد
+      // برای Vite لازم است
       window.global = window;
       
-      // GitHub Pages Path Fix
+      // بررسی کن اگر در مسیر اشتباه هستیم
       (function() {
         const currentPath = window.location.pathname;
-        const correctBase = '/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/';
+        const repoName = '-home-shop-electronic-project-esp32-evm-esp32-gui-builder';
+        const correctPath = '/' + repoName + '/';
         
-        // فقط اگر در root اصلی github.io هستیم redirect کنیم
-        if (currentPath === '/' || currentPath === '/index.html') {
-          window.location.href = correctBase;
-          return;
-        }
-        
-        // اگر در مسیر درست هستیم اما با index.html
-        if (currentPath.endsWith('/index.html')) {
-          window.location.href = currentPath.replace('/index.html', '/');
-          return;
+        // اگر کاربر به root اصلی رفته باشد
+        if (currentPath === '/' || !currentPath.includes(repoName)) {
+          window.location.href = correctPath;
         }
       })();
     </script>
     
-    <!-- فقط CSS اصلی - بقیه توسط JS لود می‌شوند -->
-    <link rel="stylesheet" href="./index.36b8a7f7.css">
-    <link rel="stylesheet" href="./index.409f6db1.css">
-    <link rel="stylesheet" href="./index.42176d7b.css">
+    <!-- توجه: مسیرها به پوشه assets اشاره می‌کنند -->
+    <link rel="stylesheet" href="assets/index.36b8a7f7.css">
+    <link rel="stylesheet" href="assets/index.409f6db1.css">
+    <link rel="stylesheet" href="assets/index.42176d7b.css">
+    <link rel="stylesheet" href="assets/index.67bfc724.css">
+    <link rel="stylesheet" href="assets/index.7b63019c.css">
     
   </head>
   
   <body>
     <div id="app"></div>
     
-    <!-- فقط اسکریپت اصلی Vite -->
-    <script type="module" crossorigin src="./index.3e4c2327.js"></script>
+    <!-- اسکریپت اصلی از پوشه assets -->
+    <script type="module" crossorigin src="assets/index.3e4c2327.js"></script>
     
-    <!-- Fallback برای مشکلات احتمالی -->
+    <!-- Fallback script -->
     <script>
-      // بعد از 5 ثانیه اگر app لود نشد، مشکل‌یابی کن
+      // بعد از 3 ثانیه بررسی کن اگر اپ لود نشد
       setTimeout(function() {
         const app = document.getElementById('app');
         if (!app || app.innerHTML.trim() === '') {
-          console.warn('Application not loaded. Debug info:');
+          console.error('App failed to load. Checking file paths...');
           
-          // بررسی کن کدام فایل‌ها مشکل دارند
-          const filesToCheck = [
-            './index.3e4c2327.js',
-            './index.36b8a7f7.css',
-            './favicon.png'
+          // تست کن که فایل‌ها وجود دارند
+          const testFiles = [
+            'assets/index.3e4c2327.js',
+            'assets/index.36b8a7f7.css',
+            'favicon.png'
           ];
           
-          filesToCheck.forEach(url => {
-            fetch(url, { method: 'HEAD' })
-              .then(res => console.log(`${url}: ${res.status} ${res.statusText}`))
-              .catch(err => console.error(`${url}: ${err.message}`));
+          testFiles.forEach(file => {
+            fetch(file)
+              .then(res => console.log(`${file}: ${res.status}`))
+              .catch(err => console.error(`${file}: ${err.message}`));
           });
           
-          // به کاربر پیام بده
+          // پیام به کاربر
           app.innerHTML = `
-            <div style="padding: 20px; font-family: Arial; text-align: center;">
-              <h2>Loading Application...</h2>
-              <p>If this takes too long, please:</p>
-              <ol style="text-align: left; display: inline-block;">
-                <li>Refresh the page (Ctrl+F5)</li>
+            <div style="padding: 20px; text-align: center; font-family: Arial;">
+              <h2>Loading LV Builder...</h2>
+              <p>If loading takes too long, please:</p>
+              <ul style="text-align: left; display: inline-block;">
+                <li>Refresh with <strong>Ctrl+F5</strong> (Windows) or <strong>Cmd+Shift+R</strong> (Mac)</li>
                 <li>Clear browser cache</li>
-                <li>Try incognito mode</li>
-              </ol>
-              <p>Or visit: <a href="https://github.com/hadipic/-home-shop-electronic-project-esp32-evm-esp32-gui-builder">GitHub Repository</a></p>
+                <li>Try incognito/private mode</li>
+              </ul>
+              <p style="margin-top: 20px;">
+                <a href="https://github.com/hadipic/-home-shop-electronic-project-esp32-evm-esp32-gui-builder">
+                  Visit GitHub Repository
+                </a>
+              </p>
             </div>
           `;
         }
-      }, 5000);
+      }, 3000);
     </script>
     
     <noscript>
       <div style="padding: 20px; text-align: center;">
-        <h2>JavaScript is Required</h2>
-        <p>This application requires JavaScript to run.</p>
-        <p>Please enable JavaScript in your browser settings.</p>
+        <h2>JavaScript Required</h2>
+        <p>Please enable JavaScript to use LV Builder.</p>
       </div>
     </noscript>
   </body>
