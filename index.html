@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <base href="/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/" />
+    <!-- base حذف شده چون مشکلات ایجاد می‌کند -->
     <link rel="icon" href="favicon.png" type="image/png" sizes="16x16" />
     <meta
       name="viewport"
@@ -13,95 +13,41 @@
     <meta name="description" content="Drag end drop GUI designer for LVGL, LV builder" />
     <script>
       window.global = window;
-      // Fix for GitHub Pages base path
+      
+      // Fix for GitHub Pages
       (function() {
-        const basePath = '/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/';
+        // بررسی کن اگر در مسیر اشتباه هستیم
         const currentPath = window.location.pathname;
+        const repoName = '-home-shop-electronic-project-esp32-evm-esp32-gui-builder';
         
-        // اگر کاربر مستقیم به root آمده باشد، redirect کنیم
-        if (currentPath === '/' || !currentPath.includes('esp32-gui-builder')) {
-          window.location.href = basePath;
+        // اگر کاربر به root اصلی رفته باشد
+        if (currentPath === '/') {
+          window.location.href = '/' + repoName + '/';
           return;
         }
         
-        // اصلاح base برای تمام لینک‌ها
-        document.addEventListener('DOMContentLoaded', function() {
-          document.querySelector('base')?.setAttribute('href', basePath);
-        });
+        // اگر در مسیر درست هستیم اما بدون trailing slash
+        if (currentPath === '/' + repoName) {
+          window.location.href = currentPath + '/';
+          return;
+        }
       })();
     </script>
-    <!-- لینک فایل‌های CSS با مسیر نسبی -->
+    
+    <!-- فقط CSS اصلی را لود کن -->
     <link rel="stylesheet" href="index.36b8a7f7.css" />
-    <link rel="stylesheet" href="index.409f6db1.css" />
-    <link rel="stylesheet" href="index.42176d7b.css" />
-    <link rel="stylesheet" href="index.67bfc724.css" />
-    <link rel="stylesheet" href="index.7b63019c.css" />
-    <link rel="stylesheet" href="el-button.ea3b16cb.css" />
-    <link rel="stylesheet" href="el-input.bd61a9f1.css" />
-    <link rel="stylesheet" href="el-input-number.e0efda4d.css" />
-    <link rel="stylesheet" href="el-progress.9002c08c.css" />
-    <link rel="stylesheet" href="el-switch.de0ad3a6.css" />
-    <link rel="stylesheet" href="ext-language_tools.0fcffd35.css" />
-    <link rel="stylesheet" href="home.cbc6813f.css" />
+    
   </head>
   <body>
     <div id="app"></div>
     
-    <!-- اسکریپت‌های اصلی با مسیر نسبی -->
+    <!-- فقط اسکریپت اصلی module type -->
     <script type="module" crossorigin src="index.3e4c2327.js"></script>
     
-    <!-- اسکریپت‌های اضافی -->
-    <script src="index.08af7957.js"></script>
-    <script src="index.7a437768.js"></script>
-    <script src="index.a146bace.js"></script>
-    <script src="index.a37f67c2.js"></script>
-    <script src="index.c076e316.js"></script>
-    <script src="Auto-Guage.05d3ec9c.js"></script>
-    <script src="_plugin-vue_export-helper.cdc0426e.js"></script>
-    <script src="demo1.ad028704.js"></script>
-    <script src="demo2.f591c3a0.js"></script>
-    <script src="demo3.fd61bfe9.js"></script>
-    <script src="demo_null.7d5c791c.js"></script>
-    <script src="demo_parent.c86f0a91.js"></script>
-    <script src="energy_monitor.b91680c9.js"></script>
-    <script src="ext-language_tools.bef568ba.js"></script>
-    <script src="home.9023b9a8.js"></script>
-    
-    <!-- Fallback script برای رفع مشکلات -->
-    <script>
-      // پس از لود صفحه، مطمئن شویم همه چیز درست کار می‌کند
-      window.addEventListener('load', function() {
-        console.log('Page loaded from GitHub Pages');
-        
-        // اگر app خالی ماند، مشکل را گزارش کن
-        setTimeout(function() {
-          const app = document.getElementById('app');
-          if (app && !app.innerHTML.trim()) {
-            console.error('App failed to load. Attempting recovery...');
-            // تلاش برای لود مجدد اسکریپت اصلی
-            const mainScript = document.querySelector('script[src*="index.3e4c2327.js"]');
-            if (mainScript) {
-              const newScript = document.createElement('script');
-              newScript.type = 'module';
-              newScript.crossOrigin = 'anonymous';
-              newScript.src = mainScript.src + '?t=' + Date.now();
-              document.head.appendChild(newScript);
-            }
-          }
-        }, 3000);
-      });
-    </script>
-    
     <noscript>
-      <div style="padding: 20px; text-align: center;">
-        <h1>JavaScript is Required</h1>
-        <p>Please enable JavaScript to use LV Builder.</p>
-        <p>
-          If you continue to have issues, please visit:
-          <a href="https://github.com/hadipic/-home-shop-electronic-project-esp32-evm-esp32-gui-builder">
-            GitHub Repository
-          </a>
-        </p>
+      <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+        <h2>JavaScript is Required</h2>
+        <p>Please enable JavaScript to use LV Builder application.</p>
       </div>
     </noscript>
   </body>
