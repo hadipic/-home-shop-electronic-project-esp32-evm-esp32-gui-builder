@@ -7,6 +7,29 @@
 </tr>
 </table>
 
+*
+🔗 معرفی ماشین مجازی EVM در شاپ الکترونیک
+
+https://shop-electronic.ir/ماشین-مجازی-جاوا-برای-امبد-بردها-evm-embedded-virtual-machi/
+
+ساخت و تولید انواع مدارات الکترونیک @shop_electronic_bot
+گروه esp32 
+https://t.me/+oi9QrKR1qdozZTc0
+سایت شاپ الکترونیک
+https://shop-electronic.ir
+گروه امبدد و کیوت
+https://t.me/Embedded_Qt
+
+🔗 کانال تلگرام EVM:
+https://t.me/esp32_evm
+
+
+🔗 مخزن گیت‌هاب ESP32 EVM:
+
+https://github.com/hadipic/evm-linux?tab=readme-ov-file
+https://github.com/hadipic/esp32-evm-bin?tab=readme-ov-file
+https://github.com/hadipic/evm_java/tree/main
+
 ```markdown
 # LVGL GUI Builder for EVM-ESP32 🎨
 
