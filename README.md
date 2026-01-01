@@ -12,7 +12,7 @@
 | 2 | <img src="./docs/preview2.png" width="300"> | [ویرایشگر ویجت](https://hadipic.github.io/-home-shop-electronic-project-esp32-evm-esp32-gui-builder/#/lv/builder/widget) |
 
 ### 👥 شبکه‌ها
-- **گروه ESP32**: https://t.me/+oi9QrKR1qdozZTc0
+- **گروه ESP32**: https://t.me/hadipic
 - **کانال EVM**: https://t.me/esp32_evm
 - **ربات**: @shop_electronic_bot
 - **وبسایت**: https://shop-electronic.ir
@@ -23,7 +23,8 @@
 - **EVM Java**: https://github.com/hadipic/evm_java
 
 ### 📚 مقالات
-- **معرفی EVM**: https://shop-electronic.ir/ماشین-مجازی-جاوا-برای-امبد-بردها-evm-embedded-virtual-machi/
+- **معرفی EVM**:
+- https://shop-electronic.ir/ماشین-مجازی-جاوا-برای-امبد-بردها-evm-embedded-virtual-machi/
 </div>
 
 ## ✨ ویژگی‌های اصلی
