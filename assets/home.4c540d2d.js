@@ -1,1 +1,0 @@
-import{d as n,z as r,r as _,o as a,A as u,B as l,C as c,D as d}from"./vendor.d575ceee.js";const i={class:"home"},v=n({__name:"home",setup(p){const e=r(),o=()=>{e.push("/lv/builder")};return e.push("/lv/builder"),(m,t)=>{const s=_("el-button");return a(),u("div",i,[l(s,{onClick:o},{default:c(()=>[...t[0]||(t[0]=[d("Editor",-1)])]),_:1})])}}});export{v as default};
